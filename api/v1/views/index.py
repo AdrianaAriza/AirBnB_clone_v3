@@ -14,12 +14,10 @@ def status():
 @app_views.route('/stats', strict_slashes=False)
 def stats():
     """"""
-    clss = {"Amenity": "amenities", "City": 'cities', "Place": "places", "Review": "reviews", "State": "states",
-            "User": "users"}
+    clss = {"Amenity": "amenities", "City": 'cities',
+            "Place": "places", "Review": "reviews",
+            "State": "states", "User": "users"}
     objs = {}
     for k, v in clss.items():
         objs[v] = storage.count(k)
     return jsonify(objs)
-
-
-
