@@ -6,13 +6,13 @@ from models import storage
 from models.city import City
 
 cities = storage.all('City')
-objs = []
 
 
 @app_views.route('/states/<state_id>/cities',
                  strict_slashes=False, methods=['GET', "POST"])
 def get_cities(state_id):
     """"""
+    objs = []
     try:
         for city in cities.values():
             if city.state_id == state_id:
@@ -30,6 +30,7 @@ def get_cities(state_id):
 def get_cities_id(city_id):
     """"""
     try:
+        objs = []
         for city in cities.values():
             if city.id == city_id:
                 if request.method == 'GET':
