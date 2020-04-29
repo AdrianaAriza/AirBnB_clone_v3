@@ -17,10 +17,10 @@ def amenities_all():
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False,
                  methods=['GET', 'DELETE', 'PUT'])
-def state_by_id(id):
+def amenities_by_id(id):
     """Amenities by id"""
     try:
-        amenity = storage.get(Amenity, id)
+        amenity = storage.get(Amenity, amenity_id)
         if request.method == 'GET':
             return jsonify(amenity.to_dict())
         if request.method == 'DELETE':
@@ -40,15 +40,15 @@ def state_by_id(id):
         abort(404)
 
 
-@app_views.route('/states', strict_slashes=False, methods=['POST'])
-def state_new():
-    """New State"""
+@app_views.route('/amenities', strict_slashes=False, methods=['POST'])
+def amenity_new():
+    """POST new Amenity"""
     if not request.json:
         abort(400, "Not a JSON")
     post = request.get_json()
     if "name" in post:
-        n_state = State(**post)
-        n_state.save()
-        return jsonify(n_state.to_dict()), 201
+        n_amenity = Amenity(**post)
+        n_amenity.save()
+        return jsonify(n_amenity.to_dict()), 201
     else:
         abort(400, "Missing name")
