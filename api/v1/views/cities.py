@@ -40,10 +40,13 @@ def get_cities_id(city_id):
             if not request.json:
                 abort(400, "Not a JSON")
             put = request.get_json()
-            if "name" in put.keys():
-                city['name'] = put['name']
-                storage.save()
-                return jsonify(city.to_dict()), 200
+            if not put:
+                abort(400, "Not a JSON")
+            for k, v in put.items():
+                if k not in ["id", "created_at", "updated_at"]:
+                    setattr(city, k, v)
+            storage.save()
+            return jsonify(city.to_dict()), 200
         else:
             abort(404)
 
