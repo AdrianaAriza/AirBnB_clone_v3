@@ -19,25 +19,24 @@ def amenities_all():
                  methods=['GET', 'DELETE', 'PUT'])
 def amenities_by_id(amenity_id):
     """Amenities by id"""
-    try:
-        amenity = storage.get(Amenity, amenity_id)
-        if request.method == 'GET':
-            return jsonify(amenity.to_dict())
-        if request.method == 'DELETE':
-            amenity.delete()
-            storage.save()
-            return jsonify({}), 200
-        if request.method == 'PUT':
-            put = request.get_json()
-            if not put:
-                abort(400, "Not a JSON")
-            for k, v in put.items():
-                if k not in ["id", "created_at", "updated_at"]:
-                    setattr(amenity, k, v)
-            storage.save()
-            return jsonify(amenity.to_dict()), 200
-    except:
+    amenity = storage.get(Amenity, amenity_id)
+    if amenity is None:
         abort(404)
+    if request.method == 'GET':
+        return jsonify(amenity.to_dict())
+    if request.method == 'DELETE':
+        amenity.delete()
+        storage.save()
+        return jsonify({}), 200
+    if request.method == 'PUT':
+        if not request.json:
+            abort(400, "Not a JSON")
+        put = request.get_json()
+        for k, v in put.items():
+            if k not in ["id", "created_at", "updated_at"]:
+                setattr(amenity, k, v)
+        storage.save()
+        return jsonify(amenity.to_dict()), 200
 
 
 @app_views.route('/amenities', strict_slashes=False, methods=['POST'])
