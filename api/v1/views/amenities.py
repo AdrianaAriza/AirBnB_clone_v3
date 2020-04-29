@@ -17,7 +17,7 @@ def amenities_all():
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False,
                  methods=['GET', 'DELETE', 'PUT'])
-def amenities_by_id(id):
+def amenities_by_id(amenity_id):
     """Amenities by id"""
     try:
         amenity = storage.get(Amenity, amenity_id)
