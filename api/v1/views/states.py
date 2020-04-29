@@ -45,11 +45,10 @@ def state_new():
     """New State"""
     try:
         post = request.get_json()
-        if "name" in post:
-            new_state = State(**post)
-            new_state.save()
-            return jsonify(new_state.to_dict()), 201
-        else:
+        if "name" not in post:
             abort(400, "Missing name")
+        new_state = State(**post)
+        new_state.save()
+        return jsonify(new_state.to_dict()), 201
     except:
         abort(400, "Not a JSON")
