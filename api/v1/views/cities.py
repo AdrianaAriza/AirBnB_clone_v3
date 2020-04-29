@@ -14,15 +14,12 @@ cities = storage.all('City')
 def get_cities(state_id):
     """"""
     objs = []
-    try:
-        for city in cities.values():
-            if city.state_id == state_id:
-                objs.append(city.to_dict())
-        if len(objs):
-            return jsonify(objs)
-        else:
-            abort(404)
-    except:
+    for city in cities.values():
+        if city.state_id == state_id:
+            objs.append(city.to_dict())
+    if len(objs):
+        return jsonify(objs)
+    else:
         abort(404)
 
 
@@ -30,29 +27,25 @@ def get_cities(state_id):
                  methods=['GET', 'DELETE', 'PUT'])
 def get_cities_id(city_id):
     """"""
-    try:
-        city = storage.get(City, city_id)
-        if city.id == city_id:
-            objs = []
-            if request.method == 'GET':
-                objs.append(city.to_dict())
-                return jsonify(objs)
-            if request.method == 'DELETE':
-                city.delete()
-                storage.save()
-                return jsonify({}), 200
-            if request.method == 'PUT':
-                put = request.get_json()
-                if not put:
-                    abort(400, "Not a JSON")
-                for k, v in put.items():
-                    if k == "name":
-                        setattr(city, k, v)
+    city = storage.get(City, city_id)
+    if not request.json:
+        abort(400, "Not a JSON")
+    if city.id == city_id:
+        if request.method == 'GET':
+            objs = [city.to_dict()]
+            return jsonify(objs)
+        if request.method == 'DELETE':
+            city.delete()
+            storage.save()
+            return jsonify({}), 200
+        if request.method == 'PUT':
+            put = request.get_json()
+            if "name" in put.keys():
+                city['name'] = put['name']
                 storage.save()
                 return jsonify(city.to_dict()), 200
-        abort(404)
-    except:
-        abort(404)
+        else:
+            abort(404)
 
 
 @app_views.route('/states/<state_id>/cities',
@@ -62,8 +55,6 @@ def new_city(state_id):
     if not request.json:
         abort(400, "Not a JSON")
     state = storage.get(State, state_id)
-    if not state:
-        abort(404)
     if state.id == state_id:
         post = request.get_json()
         if "name" in post:
