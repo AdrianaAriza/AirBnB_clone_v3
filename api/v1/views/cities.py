@@ -30,9 +30,9 @@ def get_cities(state_id):
 def get_cities_id(city_id):
     """"""
     try:
-        objs = []
         for city in cities.values():
             if city.id == city_id:
+                objs = []
                 if request.method == 'GET':
                     objs.append(city.to_dict())
                     return jsonify(objs)
