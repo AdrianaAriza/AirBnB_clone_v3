@@ -28,8 +28,6 @@ def get_cities(state_id):
 def get_cities_id(city_id):
     """"""
     city = storage.get(City, city_id)
-    if not request.json:
-        abort(400, "Not a JSON")
     if city.id == city_id:
         if request.method == 'GET':
             objs = [city.to_dict()]
@@ -39,6 +37,8 @@ def get_cities_id(city_id):
             storage.save()
             return jsonify({}), 200
         if request.method == 'PUT':
+            if not request.json:
+                abort(400, "Not a JSON")
             put = request.get_json()
             if "name" in put.keys():
                 city['name'] = put['name']
