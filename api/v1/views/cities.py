@@ -16,6 +16,7 @@ def get_cities(state_id):
     objs = []
     try:
         for city in cities.values():
+            print(type(city))
             if city.state_id == state_id:
                 objs.append(city.to_dict())
         if len(objs):
@@ -59,16 +60,15 @@ def get_cities_id(city_id):
                  strict_slashes=False, methods=['POST'])
 def new_city(state_id):
     """"""
-    try:
-        state = storage.get(State, state_id)
-        if state.id == state_id:
-            post = request.get_json()
-            if "name" in post:
-                post['state_id'] = state_id
-                n_city = City(**post)
-                n_city.save()
-                return jsonify(n_city.to_dict()), 201
-            else:
-                abort(400, "Missing name")
-    except:
-        abort(400, "Not a JSON")
+    state = storage.get(State, state_id)
+    print(type(state))
+    if state.id == state_id:
+        post = request.get_json()
+        if "name" in post:
+            post['state_id'] = state_id
+            n_city = City(**post)
+            n_city.save()
+            return jsonify(n_city.to_dict()), 201
+        else:
+            abort(400, "Missing name")
+    abort(400, "Not a JSON")
