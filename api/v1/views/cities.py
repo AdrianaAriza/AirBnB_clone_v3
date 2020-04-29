@@ -12,9 +12,9 @@ cities = storage.all('City')
                  strict_slashes=False, methods=['GET', "POST"])
 def get_cities(state_id):
     """"""
-    objs = []
     try:
         for city in cities.values():
+            objs = []
             if city.state_id == state_id:
                 objs.append(city.to_dict())
         if len(objs):
