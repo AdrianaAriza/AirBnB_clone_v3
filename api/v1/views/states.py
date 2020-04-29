@@ -32,7 +32,7 @@ def state_by_id(id):
             if not put:
                 abort(400, "Not a JSON")
             for k, v in put.items():
-                if k == "name":
+                if k not in ["id", "created_at", "updated_at"]:
                     setattr(state, k, v)
             storage.save()
             return jsonify(state.to_dict()), 200
