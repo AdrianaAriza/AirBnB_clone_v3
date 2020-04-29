@@ -60,8 +60,9 @@ def get_cities_id(city_id):
                  strict_slashes=False, methods=['POST'])
 def new_city(state_id):
     """"""
+    if not request.json:
+        abort(400, description="Not a JSON")
     state = storage.get(State, state_id)
-    print(type(state))
     if state.id == state_id:
         post = request.get_json()
         if "name" in post:
@@ -71,4 +72,3 @@ def new_city(state_id):
             return jsonify(n_city.to_dict()), 201
         else:
             abort(400, "Missing name")
-    abort(400, "Not a JSON")
