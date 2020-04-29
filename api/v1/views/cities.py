@@ -6,7 +6,8 @@ from models import storage
 from models.city import City
 
 
-@app_views.route('/states/<state_id>/cities', strict_slashes=False, methods=['GET', "POST"])
+@app_views.route('/states/<state_id>/cities',
+                 strict_slashes=False, methods=['GET', "POST"])
 def get_cities(state_id):
     """"""
     objs = []
@@ -23,7 +24,8 @@ def get_cities(state_id):
         abort(404)
 
 
-@app_views.route('/cities/<city_id>', strict_slashes=False, methods=['GET', 'DELETE', 'PUT'])
+@app_views.route('/cities/<city_id>', strict_slashes=False,
+                 methods=['GET', 'DELETE', 'PUT'])
 def get_cities_id(city_id):
     """"""
     objs = []
@@ -54,7 +56,8 @@ def get_cities_id(city_id):
         abort(404)
 
 
-@app_views.route('/states/<state_id>/cities', strict_slashes=False, methods=['POST'])
+@app_views.route('/states/<state_id>/cities',
+                 strict_slashes=False, methods=['POST'])
 def new_city(state_id):
     """"""
     try:
