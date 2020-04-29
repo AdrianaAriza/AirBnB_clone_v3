@@ -31,25 +31,25 @@ def get_cities(state_id):
 def get_cities_id(city_id):
     """"""
     try:
-        for city in cities.values():
-            if city.id == city_id:
-                objs = []
-                if request.method == 'GET':
-                    objs.append(city.to_dict())
-                    return jsonify(objs)
-                if request.method == 'DELETE':
-                    city.delete()
-                    storage.save()
-                    return jsonify({}), 200
-                if request.method == 'PUT':
-                    put = request.get_json()
-                    if not put:
-                        abort(400, "Not a JSON")
-                    for k, v in put.items():
-                        if k == "name":
-                            setattr(city, k, v)
-                    storage.save()
-                    return jsonify(city.to_dict()), 200
+        city = storage.get(City, city_id)
+        if city.id == city_id:
+            objs = []
+            if request.method == 'GET':
+                objs.append(city.to_dict())
+                return jsonify(objs)
+            if request.method == 'DELETE':
+                city.delete()
+                storage.save()
+                return jsonify({}), 200
+            if request.method == 'PUT':
+                put = request.get_json()
+                if not put:
+                    abort(400, "Not a JSON")
+                for k, v in put.items():
+                    if k == "name":
+                        setattr(city, k, v)
+                storage.save()
+                return jsonify(city.to_dict()), 200
         abort(404)
     except:
         abort(404)
