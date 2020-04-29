@@ -6,14 +6,15 @@ from models import storage
 from models.city import City
 
 cities = storage.all('City')
+states = storage.all('State')
 
 
 @app_views.route('/states/<state_id>/cities',
-                 strict_slashes=False, methods=['GET', "POST"])
+                 strict_slashes=False, methods=['GET'])
 def get_cities(state_id):
     """"""
+    objs = []
     try:
-        objs = []
         for city in cities.values():
             if city.state_id == state_id:
                 objs.append(city.to_dict())
@@ -59,11 +60,13 @@ def get_cities_id(city_id):
 def new_city(state_id):
     """"""
     try:
-        for city in cities.values():
-            if city.state_id == state_id:
+        print('hola')
+        for state in states.values():
+            if state.id == state_id:
+                print(state.name)
                 post = request.get_json()
-                post['state_id'] = state_id
                 if "name" in post:
+                    post['state_id'] = state_id
                     n_city = City(**post)
                     n_city.save()
                     return jsonify(n_city.to_dict()), 201
@@ -71,4 +74,3 @@ def new_city(state_id):
                     abort(400, "Missing name")
     except:
         abort(400, "Not a JSON")
-
