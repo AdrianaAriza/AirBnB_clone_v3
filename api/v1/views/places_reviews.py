@@ -5,35 +5,36 @@ from api.v1.views import app_views
 from models import storage
 from models.city import City
 from models.place import Place
+from models.review import Review
 from models.user import User
 
 
-@app_views.route('/cities/<city_id>/places',
+@app_views.route('/places/<place_id>/reviews',
                  strict_slashes=False, methods=['GET'])
-def get_places(city_id):
-    """"""
-    city = storage.get(City, city_id)
-    if city is None:
-        abort(404)
-    places = storage.all(Place)
-    objs = []
-    for place in places.values():
-        if place.city_id == city_id:
-            objs.append(place.to_dict())
-    return jsonify(objs)
-
-
-@app_views.route('/places/<place_id>', strict_slashes=False,
-                 methods=['GET', 'DELETE', 'PUT'])
-def get_places_id(place_id):
+def get_reviews(place_id):
     """"""
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
+    reviews = storage.all(Review)
+    objs = []
+    for review in reviews.values():
+        if review.place_id == place_id:
+            objs.append(review.to_dict())
+    return jsonify(objs)
+
+
+@app_views.route('/reviews/<review_id>', strict_slashes=False,
+                 methods=['GET', 'DELETE', 'PUT'])
+def get_reviews_id(review_id):
+    """"""
+    review = storage.get(Review, review_id)
+    if review is None:
+        abort(404)
     if request.method == 'GET':
-        return jsonify(place.to_dict())
+        return jsonify(review.to_dict())
     if request.method == 'DELETE':
-        place.delete()
+        review.delete()
         storage.save()
         return jsonify({}), 200
     if request.method == 'PUT':
@@ -42,33 +43,33 @@ def get_places_id(place_id):
         put = request.get_json()
         for k, v in put.items():
             if k == "name":
-                setattr(place, k, v)
-        place.save()
-        return jsonify(place.to_dict()), 200
+                setattr(review, k, v)
+        review.save()
+        return jsonify(review.to_dict()), 200
 
 
-@app_views.route('/cities/<city_id>/places',
+@app_views.route('/places/<place_id>/reviews',
                  strict_slashes=False, methods=['POST'])
-def new_place(city_id):
+def new_review(place_id):
     """"""
-    city = storage.get(City, city_id)
-    if city is None:
+    place = storage.get(Place, place_id)
+    if place is None:
         abort(404)
     if not request.json:
         abort(400, "Not a JSON")
     post = request.get_json()
     if "name" in post:
-        post['city_id'] = city_id
+        post['place_id'] = place_id
         if "user_id" in post:
             user = storage.get(User, post['user_id'])
             if user is None:
                 abort(404)
-            if "name" in post:
-                n_place = Place(**post)
-                n_place.save()
-                return jsonify(n_place.to_dict()), 201
+            if "text" in post:
+                n_review = Review(**post)
+                n_review.save()
+                return jsonify(n_review.to_dict()), 201
             else:
-                abort(400, "Missing name")
+                abort(400, "Missing text")
         else:
             abort(400, "Missing user_id")
     else:
