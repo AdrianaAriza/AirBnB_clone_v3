@@ -14,15 +14,12 @@ states = storage.all('State')
 def get_cities(state_id):
     """"""
     objs = []
-    try:
-        for city in cities.values():
-            if city.state_id == state_id:
-                objs.append(city.to_dict())
-        if len(objs):
-            return jsonify(objs)
-        else:
-            abort(404)
-    except:
+    for city in cities.values():
+        if city.state_id == state_id:
+            objs.append(city.to_dict())
+    if len(objs):
+        return jsonify(objs)
+    else:
         abort(404)
 
 
@@ -48,7 +45,7 @@ def get_cities_id(city_id):
                 for k, v in put.items():
                     if k == "name":
                         setattr(city, k, v)
-                storage.save()
+                city.save()
                 return jsonify(city.to_dict()), 200
         abort(404)
     except:
@@ -60,7 +57,6 @@ def get_cities_id(city_id):
 def new_city(state_id):
     """"""
     try:
-        print('hola')
         for state in states.values():
             if state.id == state_id:
                 print(state.name)
