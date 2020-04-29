@@ -5,14 +5,15 @@ from api.v1.views import app_views
 from models import storage
 from models.city import City
 
+cities = storage.all('City')
+objs = []
+
 
 @app_views.route('/states/<state_id>/cities',
                  strict_slashes=False, methods=['GET', "POST"])
 def get_cities(state_id):
     """"""
-    objs = []
     try:
-        cities = storage.all('City')
         for city in cities.values():
             if city.state_id == state_id:
                 objs.append(city.to_dict())
@@ -28,18 +29,17 @@ def get_cities(state_id):
                  methods=['GET', 'DELETE', 'PUT'])
 def get_cities_id(city_id):
     """"""
-    objs = []
     try:
-        cities = storage.all('City')
         for city in cities.values():
             if city.id == city_id:
                 if request.method == 'GET':
                     objs.append(city.to_dict())
-                elif request.method == 'DELETE':
+                    return jsonify(objs)
+                if request.method == 'DELETE':
                     city.delete()
                     storage.save()
                     return jsonify({}), 200
-                elif request.method == 'PUT':
+                if request.method == 'PUT':
                     put = request.get_json()
                     if not put:
                         abort(400, "Not a JSON")
@@ -48,10 +48,7 @@ def get_cities_id(city_id):
                             setattr(city, k, v)
                     storage.save()
                     return jsonify(city.to_dict()), 200
-        if len(objs):
-            return jsonify(objs)
-        else:
-            abort(404)
+        abort(404)
     except:
         abort(404)
 
