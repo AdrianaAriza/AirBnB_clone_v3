@@ -43,13 +43,13 @@ def state_by_id(id):
 @app_views.route('/states', strict_slashes=False, methods=['POST'])
 def state_new():
     """New State"""
-    if request.is_json:
-        post = request.get_json()
-        if "name" in post:
-            new_state = State(**post)
-            new_state.save()
-            return jsonify(new_state.to_dict()), 201
-        else:
-            abort(400, "Missing name")
-    else:
+    if not request.is_json:
         abort(400, "Not a JSON")
+    post = request.get_json()
+    if 'name' not in post:
+        abort(400, "Missing name")
+    state = State(**post)
+    storage.new(state)
+    storage.save()
+    return jsonify(state.to_dict()), 201
+    
