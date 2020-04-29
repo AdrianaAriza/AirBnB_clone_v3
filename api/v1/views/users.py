@@ -52,6 +52,6 @@ def user_new():
             n_user.save()
         else:
             abort(400, "Missing password")
+        return jsonify(n_user.to_dict()), 201
     else:
         abort(400, "Missing email")
-    return jsonify(n_user.to_dict()), 201
