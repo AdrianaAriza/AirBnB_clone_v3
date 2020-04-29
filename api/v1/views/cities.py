@@ -60,10 +60,8 @@ def get_cities_id(city_id):
 def new_city(state_id):
     """"""
     try:
-        print('hola')
         for state in states.values():
             if state.id == state_id:
-                print(state.name)
                 post = request.get_json()
                 if "name" in post:
                     post['state_id'] = state_id
