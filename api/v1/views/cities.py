@@ -16,10 +16,10 @@ def get_cities(state_id):
         for city in cities.values():
             if city.state_id == state_id:
                 objs.append(city.to_dict())
-            if len(objs):
-                return jsonify(objs)
-            else:
-                abort(404)
+        if len(objs):
+            return jsonify(objs)
+        else:
+            abort(404)
     except:
         abort(404)
 
