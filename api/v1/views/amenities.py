@@ -46,9 +46,9 @@ def amenity_new():
     if not request.json:
         abort(400, "Not a JSON")
     post = request.get_json()
-    if "name" in post:
+    if "name" not in post:
+        abort(400, "Missing name")
+    else:
         n_amenity = Amenity(**post)
         n_amenity.save()
         return jsonify(n_amenity.to_dict()), 201
-    else:
-        abort(400, "Missing name")
