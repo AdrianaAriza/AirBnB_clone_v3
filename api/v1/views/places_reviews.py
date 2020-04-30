@@ -61,15 +61,14 @@ def new_review(place_id):
     post = request.get_json()
     if "user_id" not in post:
         abort(400, "Missing user_id")
-    if "text" in post:
+    if "text" not in post:
         abort(400, "Missing text")
-    if "name" in post:
-        post['place_id'] = place_id
-        user = storage.get(User, post['user_id'])
-        if user is None:
-            abort(404)
-        n_review = Review(**post)
-        n_review.save()
-        return jsonify(n_review.to_dict()), 201
-    else:
+    if "name" not in post:
         abort(400, "Missing name")
+    post['place_id'] = place_id
+    user = storage.get(User, post['user_id'])
+    if user is None:
+        abort(404)
+    n_review = Review(**post)
+    n_review.save()
+    return jsonify(n_review.to_dict()), 201
