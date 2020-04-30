@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """ holds class User"""
 import models
 from models.base_model import BaseModel, Base
@@ -27,7 +27,7 @@ class User(BaseModel, Base):
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
-        if kwargs['password']:
-            pwd = hashlib.md5(kwargs['password'].encode())
-            self.password = pwd.hexdigest()
+        if 'password' in kwargs:
+            pwd = hashlib.md5(kwargs['password'].encode()).hexdigest()
+            kwargs['password'] = pwd
         super().__init__(*args, **kwargs)

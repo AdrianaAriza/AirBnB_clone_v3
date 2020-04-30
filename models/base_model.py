@@ -10,7 +10,6 @@ import sqlalchemy
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
-import hashlib
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
 
@@ -70,7 +69,7 @@ class BaseModel:
         if "_sa_instance_state" in new_dict:
             del new_dict["_sa_instance_state"]
         if models.storage_t == "db":
-            if "password" in new_dict:
+            if 'password' in new_dict:
                 del new_dict["password"]
         return new_dict
 
