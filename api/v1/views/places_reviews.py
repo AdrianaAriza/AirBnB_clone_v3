@@ -45,7 +45,7 @@ def get_reviews_id(review_id):
             if k not in ["id", "user_id", "place_id",
                          "created_at", "updated_at"]:
                 setattr(review, k, v)
-        review.save()
+        storage.save()
         return jsonify(review.to_dict()), 200
 
 
@@ -61,14 +61,12 @@ def new_review(place_id):
     post = request.get_json()
     if "user_id" not in post:
         abort(400, "Missing user_id")
-    if "text" not in post:
-        abort(400, "Missing text")
-    if "name" not in post:
-        abort(400, "Missing name")
-    post['place_id'] = place_id
     user = storage.get(User, post['user_id'])
     if user is None:
         abort(404)
+    if "text" not in post:
+        abort(400, "Missing text")
+    post['place_id'] = place_id
     n_review = Review(**post)
     n_review.save()
     return jsonify(n_review.to_dict()), 201
