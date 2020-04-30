@@ -34,7 +34,7 @@ def user_by_id(id):
             abort(400, "Not a JSON")
         put = request.get_json()
         for k, v in put.items():
-            if k == "name":
+            if k not in ["id", "email", "created_at", "updated_at"]:
                 setattr(user, k, v)
         user.save()
         return jsonify(user.to_dict()), 200
@@ -53,5 +53,4 @@ def user_new():
         else:
             abort(400, "Missing password")
         return jsonify(n_user.to_dict()), 201
-    else:
-        abort(400, "Missing email")
+    abort(400, "Missing email")
