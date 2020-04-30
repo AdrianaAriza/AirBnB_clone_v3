@@ -41,7 +41,8 @@ def get_places_id(place_id):
             abort(400, "Not a JSON")
         put = request.get_json()
         for k, v in put.items():
-            if k == "name":
+            if k not in ["id", "user_id", "city_id",
+                         "created_at", "updated_at"]:
                 setattr(place, k, v)
         place.save()
         return jsonify(place.to_dict()), 200
