@@ -42,7 +42,8 @@ def get_reviews_id(review_id):
             abort(400, "Not a JSON")
         put = request.get_json()
         for k, v in put.items():
-            if k == "name":
+            if k not in ["id", "user_id", "place_id",
+                         "created_at", "updated_at"]:
                 setattr(review, k, v)
         review.save()
         return jsonify(review.to_dict()), 200
